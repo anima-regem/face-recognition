@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <title>Login</title>
+  </head>
+  <body>
+    <form action="" method="post">
+      <input type="text" name="uname" id="uname" required />
+      <video id="webcam" autoplay playsinline width="640" height="480"></video>
+      <canvas id="canvas" style="display: none" width="640" height="480"></canvas>
+      <!-- <input type="file" name="file" id="file" accept="image/*" required /> -->
+
+      <button type="submit" id="btnSubmit">Login</button>
+    </form>
+
+    <script>
+      const video = document.getElementById("webcam");
+      const canvas = document.getElementById("canvas");
+      const context = canvas.getContext("2d");
+
+      if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+          video.srcObject = stream;
+          video.play();
+        });
+      } else {
+        alert("No Cameras Found!");
+      }
+
+      function capture() {
+        canvas.toBlob(function (blob) {
+          formData.append("blob", blob);
+          fetch("/login/", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((result) => alert(JSON.stringify(result, null, 2)));
+        }, "image/png");
+      }
+
+      $("#btnSubmit").click(function (e) {
+        e.preventDefault();
+
+        var uname = $("#uname").val();
+        context.drawImage(video, 0, 0,640,480);
+        var dataUrl = canvas.toDataURL();
+        var blobData;
+        canvas.toBlob((blob) => {
+          blobData = blob;
+          const fd = new FormData()
+          fd.append('uname', uname)
+          fd.append('dataurl',dataUrl)
+          fd.append('blob',blobData,'blob.png')
+          $.ajax({
+            url: "/login/",
+            type: "POST",
+            data: fd,
+            contentType: false,
+            processData: false,
+          });
+        });
+        // var blobURL = URL.createObjectURL(blobData)
+      });
+    </script>
+  </body>
+</html>
