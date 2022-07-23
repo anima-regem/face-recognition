@@ -1,27 +1,87 @@
 {% extends "base.html" %}
 
 {% block contents %}
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
   <div class="navbar-end">
     <div class="navbar-item">
       <div class="buttons">
-        <a class="button is-light" href="{{ url_for('auth.login') }}"> Login </a>
-        <a class="button is-info" href="{{ url_for('auth.signup') }}"> Signup </a>
+        <a class="button is-info is-rounded" href="{{ url_for('auth.login') }}"> Login </a>
+        <a class="button is-info is-rounded" href="{{ url_for('auth.signup') }}"> Signup </a>
 
       </div>
     </div>
   </div>
 </div>
 </nav>
+<br/>
+<br/>
+<div class="columns is-centered is-vcentered p-5">
+  <div id="form-control" class="box columns is-centered is-vcentered">
     <form action="" method="post">
-      <input type="text" name="uname" id="uname" placeholder="Type your username" required />
-      <input type="text" name="email" id="email" placeholder="Type your email" required />
-      <video id="webcam" autoplay playsinline width="640" height="480"></video>
-      <canvas id="canvas" style="display: none" width="640" height="480"></canvas>
-      <!-- <input type="file" name="file" id="file" accept="image/*" required /> -->
+      <div class="column columns is-full is-centered">
+        <div class="field">
+          <label class="label">Username</label>
+          <div class="control has-icons-left has-icons-right">
+            <input
+              type="text"
+              name="uname"
+              id="uname"
+              required
+              autocomplete="off"
+              class="input is-info is-rounded"
+              placeholder="eg. Anima Regem"
+            />
+            <span class="icon is-small is-left">
+              <i class="fas fa-user"></i>
+            </span>
+          </div>
+        </div>
+      </div>
 
-      <button type="submit" id="btnSubmit">Signup</button>
+      <div class="column columns is-full is-centered">
+        <div class="field">
+          <label class="label">Email</label>
+          <div class="control has-icons-left has-icons-right">
+            <input
+              type="text"
+              name="email"
+              id="email"
+              required
+              autocomplete="off"
+              class="input is-info is-rounded"
+              placeholder="eg. person@email.com"
+            />
+            <span class="icon is-small is-left">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <video
+        id="webcam"
+        class="has-ratio is-4by3 column is-full"
+        autoplay
+        playsinline
+        width="640"
+        height="480"
+      ></video>
+      <canvas
+        id="canvas"
+        style="display: none"
+        width="640"
+        height="480"
+      ></canvas>
+      <div class="column columns is-full is-centered">
+        <button type="submit" id="btnSubmit" class="button is-info is-rounded is-outlined">
+          Signup
+        </button>
+      </div>
     </form>
+  </div>
+</div>
+
+
 
     <script>
       const video = document.getElementById("webcam");
@@ -57,6 +117,14 @@
             data: fd,
             contentType: false,
             processData: false,
+            success: function()
+              {
+                window.location.href = '/login/'
+              },
+            error: function()
+              {
+                window.location.href = '/signup/'
+              }
           });
         });
       });

@@ -1,64 +1,115 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block contents %}
 
-{% block contents %}
-
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <a class="button is-light" href="{{ url_for('auth.login') }}"> Login </a>
-            <a class="button is-info" href="{{ url_for('auth.signup') }}"> Signup </a>
-
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+  <div class="navbar-end">
+    <div class="navbar-item">
+      <div class="buttons">
+        <a
+          class="button is-info is-rounded"
+          href="{{ url_for('auth.login') }}"
+        >
+          Login
+        </a>
+        <a
+          class="button is-info is-rounded"
+          href="{{ url_for('auth.signup') }}"
+        >
+          Signup
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+<br />
+<br />
+<div class="columns is-centered is-vcentered p-5">
+  <div id="form-control" class="box columns is-centered is-vcentered">
+    <form action="" method="post">
+      <div class="column columns is-full is-centered">
+        <div class="field">
+          <label class="label">Username</label>
+          <div class="control has-icons-left has-icons-right">
+            <input
+              type="text"
+              name="uname"
+              id="uname"
+              required
+              autocomplete="off"
+              class="input is-info is-rounded"
+              placeholder="eg. Anima Regem"
+            />
+            <span class="icon is-small is-left">
+              <i class="fas fa-user"></i>
+            </span>
           </div>
         </div>
       </div>
-    </div>
-  </nav>
-    <form action="" method="post">
-      <input type="text" name="uname" id="uname" required />
-      <video id="webcam" autoplay playsinline width="640" height="480"></video>
-      <canvas id="canvas" style="display: none" width="640" height="480"></canvas>
-      <!-- <input type="file" name="file" id="file" accept="image/*" required /> -->
-
-      <button type="submit" id="btnSubmit">Login</button>
+      <video
+        id="webcam"
+        class="has-ratio is-4by3 column is-full"
+        autoplay
+        playsinline
+        width="640"
+        height="480"
+      ></video>
+      <canvas
+        id="canvas"
+        style="display: none"
+        width="640"
+        height="480"
+      ></canvas>
+      <div class="column columns is-full is-centered">
+        <button type="submit" id="btnSubmit" class="button is-info is-rounded is-centered">
+          Login
+        </button>
+      </div>
     </form>
+  </div>
+</div>
 
-    <script>
-      const video = document.getElementById("webcam");
-      const canvas = document.getElementById("canvas");
-      const context = canvas.getContext("2d");
+<script>
+  const video = document.getElementById("webcam");
+  const canvas = document.getElementById("canvas");
+  const context = canvas.getContext("2d");
 
-      if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-          video.srcObject = stream;
-          video.play();
-        });
-      } else {
-        alert("No Cameras Found!");
-      }
+  if (navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+      video.srcObject = stream;
+      video.play();
+    });
+  } else {
+    alert("No Cameras Found!");
+  }
 
-      
+  $("#btnSubmit").click(function (e) {
+    e.preventDefault();
 
-      $("#btnSubmit").click(function (e) {
-        e.preventDefault();
+    var uname = $("#uname").val();
+    context.drawImage(video, 0, 0, 640, 480);
+    var blobData;
+    canvas.toBlob((blob) => {
+      blobData = blob;
+      const fd = new FormData();
+      fd.append("uname", uname);
+      fd.append("blob", blobData, "blob.png");
+      $.ajax({
+        url: "/login/",
+        type: "POST",
+        data: fd,
+        contentType: false,
+        processData: false,
+        success: function()
+        {
+          window.location.href = '/home/'
+        },
+        error: function()
+        {
+          window.location.href = "/login/"
 
-        var uname = $("#uname").val();
-        context.drawImage(video, 0, 0,640,480);
-        var blobData;
-        canvas.toBlob((blob) => {
-          blobData = blob;
-          const fd = new FormData()
-          fd.append('uname', uname)
-          fd.append('blob',blobData,'blob.png')
-          $.ajax({
-            url: "/login/",
-            type: "POST",
-            data: fd,
-            contentType: false,
-            processData: false,
-          });
-        });
-      });
-    </script>
+        }
+      })
+    });
+  });
+</script>
 
 {% endblock %}

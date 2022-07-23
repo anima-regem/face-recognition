@@ -15,7 +15,6 @@ def create_app():
     app.config['SECRET_KEY'] = SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=True
-    app.config['UPLOAD_FOLDER'] = path.join('/uploads/')
     db.init_app(app)
 
     from .auth import auth

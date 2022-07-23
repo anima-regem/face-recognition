@@ -13,18 +13,49 @@
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
       crossorigin="anonymous"
     ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
-    
-    {% block contents %}
+    {% block contents %} {% endblock %} {% block flash_msg %} {% with messages =
+    get_flashed_messages(with_categories=True) %} {% if messages %} {% for
+    category,msg in messages %} {% if category == 'error' %}
+    <article class="message is-danger" id="flash">
+      <div class="message-header">
+        <p>Oops...</p>
+        <button
+          class="delete"
+          aria-label="delete"
+          onclick="document.getElementById('flash').style.display = 'None';"
+        ></button>
+      </div>
+      <div class="message-body">{{msg}}</div>
+    </article>
+    {% else %}
+    <article class="message is-info" id="flash">
+      <div class="message-header">
+        <p>Success</p>
+        <button
+          class="delete"
+          aria-label="delete"
+          onclick="document.getElementById('flash').style.display = 'None';"
+        ></button>
+      </div>
+      <div class="message-body">{{msg}}</div>
+    </article>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
+    <style defer>
+      #flash {
+        position: fixed;
+        right: 1px;
+        bottom: 1px;
+      }
+    </style>
     {% endblock %}
-
-    <article class="message is-info">
-        <div class="message-body">
-            {% for message in flash %}
-                {{ message }}
-            {% endfor %}
-        </div>
-      </article>
   </body>
 </html>
