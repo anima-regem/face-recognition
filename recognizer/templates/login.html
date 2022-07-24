@@ -4,10 +4,7 @@
   <div class="navbar-end">
     <div class="navbar-item">
       <div class="buttons">
-        <a
-          class="button is-info is-rounded"
-          href="{{ url_for('auth.login') }}"
-        >
+        <a class="button is-info is-rounded" href="{{ url_for('auth.login') }}">
           Login
         </a>
         <a
@@ -59,7 +56,11 @@
         height="480"
       ></canvas>
       <div class="column columns is-full is-centered">
-        <button type="submit" id="btnSubmit" class="button is-info is-rounded is-centered">
+        <button
+          type="submit"
+          id="btnSubmit"
+          class="button is-info is-rounded is-centered"
+        >
           Login
         </button>
       </div>
@@ -75,6 +76,7 @@
   if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
       video.srcObject = stream;
+      console.log(stream);
       video.play();
     });
   } else {
@@ -84,31 +86,57 @@
   $("#btnSubmit").click(function (e) {
     e.preventDefault();
 
-    var uname = $("#uname").val();
-    context.drawImage(video, 0, 0, 640, 480);
-    var blobData;
-    canvas.toBlob((blob) => {
-      blobData = blob;
-      const fd = new FormData();
-      fd.append("uname", uname);
-      fd.append("blob", blobData, "blob.png");
-      $.ajax({
-        url: "/login/",
-        type: "POST",
-        data: fd,
-        contentType: false,
-        processData: false,
-        success: function()
-        {
-          window.location.href = '/home/'
-        },
-        error: function()
-        {
-          window.location.href = "/login/"
+    var videoBlob;
 
+    navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+      const options = { mimeType: "video/webm" };
+      const recordedChunks = [];
+      const mediaRecorder = new MediaRecorder(stream, options);
+
+      mediaRecorder.addEventListener("dataavailable", function (e) {
+        if (e.data.size > 0) {
+          recordedChunks.push(e.data);
         }
-      })
+      });
+
+      mediaRecorder.addEventListener("stop", function () {
+        var videoBlob = new Blob(recordedChunks, { type: "video/webm" });
+        /*href = URL.createObjectURL(new Blob(recordedChunks));*/
+        imagePOST(videoBlob);
+      });
+
+      mediaRecorder.start();
+      setTimeout(() => {
+        mediaRecorder.stop();
+      }, 5000);
+      
     });
+
+    function imagePOST(videoBlob) {
+      var uname = $("#uname").val();
+      context.drawImage(video, 0, 0, 640, 480);
+      var blobData;
+      canvas.toBlob((blob) => {
+        blobData = blob;
+        const fd = new FormData();
+        fd.append("uname", uname);
+        fd.append("blob", blobData, "blob.png");
+        fd.append("video", videoBlob, "video.webm");
+        $.ajax({
+          url: "/login/",
+          type: "POST",
+          data: fd,
+          contentType: false,
+          processData: false,
+          success: function () {
+            window.location.href = "/home/";
+          },
+          error: function () {
+            window.location.href = "/login/";
+          },
+        });
+      });
+    }
   });
 </script>
 

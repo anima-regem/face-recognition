@@ -1,3 +1,4 @@
+from ctypes import sizeof
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, Response, abort
 from .modals import User
 from . import db
@@ -37,6 +38,11 @@ def login():
     if(request.method=='POST'):
         uname = request.form.get('uname')
         file = request.files['blob']
+        video = request.files['video']
+        videoData = video.read()
+        videoFile = io.BytesIO(videoData)
+        print(videoData)
+
         unknwn_read = file.read()
         unknwn = io.BytesIO(unknwn_read)
 
