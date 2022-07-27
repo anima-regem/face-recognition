@@ -64,6 +64,9 @@
           Login
         </button>
       </div>
+      <div id="popup" style="display: None;">
+          Blink detection is fired!
+      </div>
     </form>
   </div>
 </div>
@@ -89,6 +92,7 @@
     var videoBlob;
 
     navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+      document.getElementById("popup").style.display = "Block";
       const options = { mimeType: "video/webm" };
       const recordedChunks = [];
       const mediaRecorder = new MediaRecorder(stream, options);
@@ -100,8 +104,8 @@
       });
 
       mediaRecorder.addEventListener("stop", function () {
+        document.getElementById("popup").style.display = "None";
         var videoBlob = new Blob(recordedChunks, { type: "video/webm" });
-        /*href = URL.createObjectURL(new Blob(recordedChunks));*/
         imagePOST(videoBlob);
       });
 

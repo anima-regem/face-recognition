@@ -5,6 +5,8 @@ from . import db
 import face_recognition
 from flask_login import login_required, login_user, current_user, logout_user
 import io
+from .blink_detection import blink_detector
+
 
 def recognizer(known, unknown):
     known_image = face_recognition.load_image_file(known)
@@ -41,7 +43,13 @@ def login():
         video = request.files['video']
         videoData = video.read()
         videoFile = io.BytesIO(videoData)
-        print(videoData)
+        videoFile.seek(0)
+        with open("my_file.webm", "wb") as binary_file:
+                binary_file.write(videoData)
+        blinking = blink_detector()
+        if(not blinking):
+            flash('Blink Not detected', category='danger')
+            return {"code":1}
 
         unknwn_read = file.read()
         unknwn = io.BytesIO(unknwn_read)
