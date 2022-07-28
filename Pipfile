@@ -11,6 +11,7 @@ sqlalchemy = "*"
 flask-wtf = "*"
 flask-cors = "*"
 opencv-python = "*"
+flask-mail = "*"
 
 [dev-packages]
 
