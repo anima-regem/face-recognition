@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Verify
+  
+{% endblock %}
+{% block contents %}
+<nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-info is-rounded" href="{{ url_for('auth.login') }}">
+            Login
+          </a>
+          <a
+            class="button is-info is-rounded"
+            href="{{ url_for('auth.signup') }}"
+          >
+            Signup
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+    <div class="columns is-centered is-vcentered p-5">
+        <div id="form-control" class="box columns is-centered is-vcentered">
+          <form action="/validate/" method="post">
+            <div class="column columns is-full is-centered">
+              <div class="field">
+                <label class="label">OTP</label>
+                <div class="control has-icons-left has-icons-right">
+                  <input
+                    type="text"
+                    name="otp"
+                    id="otp"
+                    required
+                    autocomplete="off"
+                    class="input is-info is-rounded"
+                    placeholder="eg. Anima Regem"
+                  />
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-key"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="column columns is-full is-centered">
+              <button
+                type="submit"
+                id="btnSubmit"
+                class="button is-info is-rounded is-centered"
+              >
+                Verify
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+{% endblock %}

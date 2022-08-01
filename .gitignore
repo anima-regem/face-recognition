@@ -1,2 +1,3 @@
 .vscode
 recognizer/__pycache__/
+recognizer/config.py

@@ -1,4 +1,10 @@
-{% extends "base.html" %} {% block contents %}
+{% extends "base.html" %} 
+{% block title %}
+
+Login
+  
+{% endblock %}
+{% block contents %}
 
 <nav class="navbar is-light" role="navigation" aria-label="main navigation">
   <div class="navbar-end">
@@ -79,7 +85,6 @@
   if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
       video.srcObject = stream;
-      console.log(stream);
       video.play();
     });
   } else {
@@ -112,7 +117,7 @@
       mediaRecorder.start();
       setTimeout(() => {
         mediaRecorder.stop();
-      }, 5000);
+      }, 3000);
       
     });
 
@@ -132,9 +137,10 @@
           data: fd,
           contentType: false,
           processData: false,
-          success: function () {
-            window.location.href = "/home/";
-          },
+          success: function(data) {
+            $("html").html(data);
+            
+           },
           error: function () {
             window.location.href = "/login/";
           },
